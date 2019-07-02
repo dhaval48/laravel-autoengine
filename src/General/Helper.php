@@ -58,7 +58,7 @@ Class Helper {
     }
 
     public function makeFiles($request, $production = false, $old_data = "") {
-        $project_path_main = base_path();
+        $project_path_main = env('DEV_PROJECT_PATH');
         if($production) {
             $project_path_main = env('PROD_PROJECT_PATH');
         }
@@ -171,6 +171,7 @@ Class Helper {
                         'ModelArray' => "// [ModelArray]",
                         'Relation' => $this->field['relation'],
                         'GRID_RESET' => "// [GRID_RESET]",
+                        'POST_METHOD' => $this->checkPostMethod($request),
                         'Controller_Relation' => $this->field['controller_relation'],
                         'Controller_Search_Relation' => $this->field['controller_search_relation'],
                     ];
@@ -215,6 +216,27 @@ Class Helper {
                 file_put_contents($key, $value);
             }
         }
+    }
+
+    public function checkPostMethod($request){
+        $method = 'this.form.post(this.module.store_route).then(response => {';
+        if($this->checkFileElement($request)) {
+            $method = `
+                var data = new FormData($("form")[0]);"\n\n"
+                this.form.postWithFile(this.module.store_route,data).then(response => {
+                `;
+        }
+
+        return $method;
+    }
+
+    public function checkFileElement($request){
+        for($i=0; $i < count($request->input_name); $i++) {
+            if($request->input_type[$i] == "file") {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function putContentDhaval($request, $project_path_main, $files) {
@@ -742,6 +764,22 @@ Class Helper {
                         <label for='".$input_name."'> {{this.module.lang.".$db_name."}} </label>
 
                         <input type='text' name='".$db_name."' class='form-control' v-model='".$v_model."'>
+                        <span class='help-block text-danger' 
+                        v-if='".$error_if."'
+                        v-text='".$error_end."'></span>
+                    </div>
+                </div>
+                ";
+
+                $this->field['test_case_data'] .= "->type('".$db_name."', 'Demo')"."\n"."\t"."\t"."\t"."\t"."\t";
+            } else if($request->input_type[$i] == "file") {
+                $form_fields .= 
+                "
+                <div class='col-sm-6'>
+                    <div :class='".$first."'>
+                        <label for='".$input_name."'> {{this.module.lang.".$db_name."}} </label>
+
+                        <input type='file' name='".$db_name."' class='form-control' v-model='".$v_model."'>
                         <span class='help-block text-danger' 
                         v-if='".$error_if."'
                         v-text='".$error_end."'></span>

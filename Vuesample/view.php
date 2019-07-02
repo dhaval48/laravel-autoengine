@@ -13,12 +13,12 @@
                         <div class="card-header-text">
                             {{ $data['id'] != 0 ? $data['lang']['edit_title'] : $data['lang']['create_title'] }}
                         </div>
-                    </a>                    
+                    </a>
                 </div>
 
             @else
 
-                <h5><div class="card-header">{{ $data['lang']['list'] }}</div></h5>                   
+                <div class="card-header">{{ $data['lang']['list'] }}</div>
                
             @endif
                 <div class="card-body">
