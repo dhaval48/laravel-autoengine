@@ -8,7 +8,12 @@
             
             @if(!isset($data['lists'])) 
                 <div class="card-header">                    
-                    {{ $data['id'] != 0 ? $data['lang']['edit_title'] : $data['lang']['create_title'] }}
+                    <a class="card-title theme-color" href="{{ $data['list_route'] }}"> 
+                        <div class="back-arrow theme-color">&lsaquo;</div>
+                        <div class="card-header-text">
+                            {{ $data['id'] != 0 ? $data['lang']['edit_title'] : $data['lang']['create_title'] }}
+                        </div>
+                    </a>
                 </div>
 
             @else

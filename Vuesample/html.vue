@@ -21,12 +21,14 @@
             
             <div class="card-actionbar">
                 <div class="card-actionbar-row">
-                    <button v-if="!is_save" type="submit" class="btn btn-flat btn-primary" :disabled="form.errors.any()">{{this.module.common.save}}</button>
+
+                    <button v-if="!is_save" type="submit" class="btn btn-flat btn-primary theme-btn" :disabled="form.errors.any()">{{this.module.common.save}}</button>
 
                     <button v-else class="btn btn-primary" type="submit" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span class="spinner-border spinner-border-sm theme-btn" role="status" aria-hidden="true"></span>
                         <span>{{this.module.id != 0 ? 'Updating':'Saving'}}...</span>
                     </button>
+
                 </div>
             </div>
         </form>
