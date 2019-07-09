@@ -71,6 +71,16 @@ class LaravelCrudServiceProvider extends ServiceProvider
             __DIR__.'/resources/lang' => resource_path('lang'),
         ]);
 
+        // Publishing the Swagger.
+        $this->publishes([
+            __DIR__.'/development' => base_path('development'),
+        ]);
+
+        // Publishing the Swagger.
+        $this->publishes([
+            __DIR__.'/swagger' => public_path('swagger'),
+        ]);
+
         // Create directory and file if not exist
         if(!file_exists(base_path().'/routes/Common.php')){
             file_put_contents(base_path().'/routes/Common.php', file_get_contents(__DIR__.'/Common.php'));

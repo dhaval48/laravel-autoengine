@@ -20,11 +20,59 @@ class [UNAME]Controller extends Controller {
         $this->middleware('locale:en');
     }
 
+
+    /**
+     * @OA\Get(
+     *     path="/api/[MODULE]s",
+     *     @OA\Response(response="200", description="OK", @OA\JsonContent()),
+     *     @OA\Response(response="422", description="Missing Data", @OA\JsonContent()),
+     *     @OA\Response(response="400",description="Invalid ID supplied", @OA\JsonContent()),
+     *     @OA\Response(response="404", description="[ULABEL] not found", @OA\JsonContent()),
+     *     security={
+     *       {"api_key": {}}
+     *     }
+     * )
+     */
+
     public function index(Request $request) { 
 
         $[MODULE] = Module::latest()->paginate(25);
         return Helpers::successResponse('',$[MODULE]);
     }
+
+
+    /**
+     * @OA\Post(
+     *     path="/api/[MODULE]/create",
+     *     description="[ULABEL] Created!",
+           [SWAGGER]
+     *     @OA\Response(response=405, description="Invalid input", @OA\JsonContent()),
+     *     @OA\Response(response="200", description="[ULABEL] Created!", @OA\JsonContent()),
+     *     @OA\Response(response="422", description="Somethings goes wrong.", @OA\JsonContent()),
+     *     security={}
+     * )
+     */
+
+
+    /**
+     * @OA\Post(
+     *     path="/api/[MODULE]/update",
+     *     description="[ULABEL] Updated!",
+     *     @OA\Parameter(
+     *         name="id",
+     *         required=false,
+     *         in="query",
+     *         @OA\Schema(
+     *           type="integer",
+     *         )
+     *     ),
+           [SWAGGER]
+     *     @OA\Response(response=405, description="Invalid input", @OA\JsonContent()),
+     *     @OA\Response(response="200", description="[ULABEL] Updated!", @OA\JsonContent()),
+     *     @OA\Response(response="422", description="Somethings goes wrong.", @OA\JsonContent()),
+     *     security={}
+     * )
+     */
 
     public function store(Request $request) {
         $this->validate($request, [
@@ -56,6 +104,27 @@ class [UNAME]Controller extends Controller {
         return Helpers::successResponse($message,$model);
     }
 
+
+    /**
+     * @OA\Get(
+     *     path="/api/[MODULE]/edit/{id}",
+     *     @OA\Parameter(
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(
+     *           type="integer",
+     *           format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="OK", @OA\JsonContent()),
+     *     @OA\Response(response="422", description="Error while getting [ULABEL] data. Try again latter", @OA\JsonContent()),
+     *     security={
+     *       {"api_key": {}}
+     *     }
+     * )
+     */
+
     public function edit($id, Request $request) {
         $model = Module::findorfail($id);
         $formelement = $model->getAttributes();        
@@ -74,6 +143,26 @@ class [UNAME]Controller extends Controller {
         }
         return Helpers::successResponse('',$formelement);
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/[MODULE]/delete/{id}",
+     *     @OA\Parameter(
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(
+     *           type="integer",
+     *           format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="[ULABEL] Deleted!", @OA\JsonContent()),
+     *     @OA\Response(response="422", description="Error while deleting [ULABEL]. Try again latter", @OA\JsonContent()),
+     *     security={
+     *       {"api_key": {}}
+     *     }
+     * )
+     */
 
     public function destroy(Request $request){
         

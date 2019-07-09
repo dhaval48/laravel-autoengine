@@ -9,7 +9,7 @@ use App\Models\[UNAME] as Module;
 class [UNAME] extends TestCase
 {
 
-	public function getToken($access_token = false)
+    public function getToken($access_token = false)
     {
         $body = [
             'client_id' => 1,
@@ -47,7 +47,7 @@ class [UNAME] extends TestCase
                     [TESTCASEDATA]        
                 ];
 
-        $response = $this->post('/api/[MODULE]/store',$body,
+        $response = $this->post('/api/[MODULE]/create',$body,
                         [
                             'Accept' => 'application/json',
                             'Authorization' => "Bearer ".$this->getToken(true)
@@ -100,7 +100,7 @@ class [UNAME] extends TestCase
 
         $model = Module::orderBy('id', 'desc')->first();
 
-        $response = $this->get('api/[MODULE]/destroy/'.$model->id,
+        $response = $this->get('api/[MODULE]/delete/'.$model->id,
                         [
                             'Accept' => 'application/json',
                             'Authorization' => "Bearer ".$this->getToken(true)

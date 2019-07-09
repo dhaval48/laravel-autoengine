@@ -99,7 +99,7 @@ Class ApiHelper {
 
         $random = rand();
         $this->field['migration_file_name'] = $random."_".$request->table_name;
-
+        
         $replace_word = [
                         'MODULE' => strtolower($controller_name),
                         'UMODULE' => ucfirst($controller_name),
@@ -115,6 +115,7 @@ Class ApiHelper {
 
                         'FILLEBLE_LINES' => $this->field['fillable_lines'],
                         'SEARCHELEMENT_LINES' => $this->field['searchelement'],
+                        'SWAGGER' => $this->field['swagger_data'],
 
                         'GridSave' => "// [GridSave]",
                         'GridEdit' => "// [GridEdit]",
@@ -136,7 +137,7 @@ Class ApiHelper {
                 }
             }
         }        
-
+        
         $this->getAllFiles($request, $project_path_main, $controller_name, $old_data);
         
         $this->putContentDhaval($request, $project_path_main, $this->field['deletefiles']);
@@ -232,7 +233,7 @@ Class ApiHelper {
                 }
             }
         }
-               
+        
         $this->field['files'] = [
                 //Replace key word
                 $project_path_main.'/routes/api.php' => file_get_contents($project_path_main.'/routes/api.php'),
@@ -246,7 +247,7 @@ Class ApiHelper {
         $fillable_lines = "";
         $searchelement = "";
         $test_data = "";
-        
+        $swagger_data = "";
         //[VALIDATION]
         $this->getValidation($request);
         
@@ -260,10 +261,16 @@ Class ApiHelper {
             
             // [TESTCASEDATA]
             $test_data .= $this->testData($request->name[$i], $request->type[$i]);
+
+            // [SWAGGER]
+            $swagger_data .= $this->swaggerData($request->name[$i], $request->type[$i], $request->validation[$i]);
+
         }
+        
         $this->field['test_case_data'] = $test_data;
         $this->field['fillable_lines'] = $fillable_lines;
         $this->field['searchelement'] = $searchelement;
+        $this->field['swagger_data'] = $swagger_data;
     }
 
     //[VALIDATION]
@@ -439,6 +446,73 @@ Class ApiHelper {
             return "'".strtolower($value)."'"." => 10.04,"."\n"."\t"."\t"."\t"."\t"."\t"."\t";
         } else if($type == 'date') {
             return "'".strtolower($value)."'"." => "."'".Helpers::parseDBdate(date('m/d/Y'))."',"."\n"."\t"."\t"."\t"."\t"."\t"."\t";
+        }
+    }
+
+    // [SWAGGER]
+    public function swaggerData($value, $type, $validation) {
+        $valid = $validation ? 'true' : 'false';
+        if($type == 'varchar') {
+           return '
+     *      @OA\Parameter(
+     *         name="'.$value.'",
+     *         required='.$valid.',
+     *         in="query",
+     *         @OA\Schema(
+     *           type="string",
+     *         )
+     *      ),'."\n"."\t";
+
+        } else if($type == 'integer') {
+
+            return '
+     *      @OA\Parameter(
+     *         name="'.$value.'",
+     *         required='.$valid.',
+     *         in="query",
+     *         @OA\Schema(
+     *           type="integer",
+     *           format="int64",
+     *         )
+     *      ),'."\n"."\t";
+
+        } else if($type == 'tinyint') {
+            return '
+     *      @OA\Parameter(
+     *         name="'.$value.'",
+     *         description= "e.g. 0 OR 1",       
+     *         required='.$valid.',
+     *         in="query",
+     *         @OA\Schema(
+     *           type="integer",
+     *           minimum=0,
+     *           maximum=1,
+     *         )
+     *      ),'."\n"."\t";
+        } else if($type == 'double') {
+            return '
+     *      @OA\Parameter(
+     *         name="'.$value.'",
+     *         description= "e.g. 10.50",       
+     *         required='.$valid.',
+     *         in="query",
+     *         @OA\Schema(
+     *           type="number",
+     *           format="double",
+     *         )
+     *      ),'."\n"."\t";
+        } else if($type == 'date') {
+            return '
+     *      @OA\Parameter(
+     *         name="'.$value.'",
+     *         description= "e.g. 2019-07-22",       
+     *         required='.$valid.',
+     *         in="query",
+     *         @OA\Schema(
+     *           type="string",
+     *           format="date",
+     *         )
+     *      ),'."\n"."\t";
         }
     }
 }
