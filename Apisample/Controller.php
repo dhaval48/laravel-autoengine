@@ -28,9 +28,7 @@ class [UNAME]Controller extends Controller {
      *     @OA\Response(response="422", description="Missing Data", @OA\JsonContent()),
      *     @OA\Response(response="400",description="Invalid ID supplied", @OA\JsonContent()),
      *     @OA\Response(response="404", description="[ULABEL] not found", @OA\JsonContent()),
-     *     security={
-     *       {"api_key": {}}
-     *     }
+     *     security={ {"default": {}} },
      * )
      */
 
@@ -49,7 +47,7 @@ class [UNAME]Controller extends Controller {
      *     @OA\Response(response=405, description="Invalid input", @OA\JsonContent()),
      *     @OA\Response(response="200", description="[ULABEL] Created!", @OA\JsonContent()),
      *     @OA\Response(response="422", description="Somethings goes wrong.", @OA\JsonContent()),
-     *     security={}
+     *     security={ {"default": {}} },
      * )
      */
 
@@ -70,7 +68,7 @@ class [UNAME]Controller extends Controller {
      *     @OA\Response(response=405, description="Invalid input", @OA\JsonContent()),
      *     @OA\Response(response="200", description="[ULABEL] Updated!", @OA\JsonContent()),
      *     @OA\Response(response="422", description="Somethings goes wrong.", @OA\JsonContent()),
-     *     security={}
+     *     security={ {"default": {}} },
      * )
      */
 
@@ -119,9 +117,7 @@ class [UNAME]Controller extends Controller {
      *     ),
      *     @OA\Response(response="200", description="OK", @OA\JsonContent()),
      *     @OA\Response(response="422", description="Error while getting [ULABEL] data. Try again latter", @OA\JsonContent()),
-     *     security={
-     *       {"api_key": {}}
-     *     }
+     *     security={ {"default": {}} },
      * )
      */
 
@@ -158,9 +154,7 @@ class [UNAME]Controller extends Controller {
      *     ),
      *     @OA\Response(response="200", description="[ULABEL] Deleted!", @OA\JsonContent()),
      *     @OA\Response(response="422", description="Error while deleting [ULABEL]. Try again latter", @OA\JsonContent()),
-     *     security={
-     *       {"api_key": {}}
-     *     }
+     *     security={ {"default": {}} },
      * )
      */
 
