@@ -26,6 +26,7 @@ class [UNAME]Controller extends Controller {
     public $data = [];        
     
     public $form_view = 'backend.modules.[LNAME]';
+    public $form_list = 'backend.modules.[LNAME]-list';
     public $form_export = 'backend.modules.[LNAME]-table';
 
     /**
@@ -52,7 +53,7 @@ class [UNAME]Controller extends Controller {
         
         $this->data['list_data'] = $model->list_data();
         $this->data['fillable'] = Helpers::formatDeleteFillable();
-        return view($this->form_view, ['data'=>$this->data]);
+        return view($this->form_list, ['data'=>$this->data]);
     }
 
     public function Paginate($from_delete = false ,Request $request) {
@@ -185,11 +186,10 @@ class [UNAME]Controller extends Controller {
         $this->data['id'] = $id;
         $model = Module::findorfail($id);
         $formelement = $model->getAttributes();
-        $formelement['_token'] = csrf_token();
         // [DropdownSelectedValue]
         
         // [GridEdit]
-        $this->data['fillable'] = $formelement;
+        $this->data['formData'] = $formelement;
 
         $this->data['permissions'] = HandlePermission::getPermissionsVue($this->data['dir']);
 

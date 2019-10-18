@@ -18,7 +18,8 @@ Class Helper {
     public $sample_route;
     public $sample_side;
     public $sample_view;
-    public $sample_vue;
+    public $sample_modulelist;
+    // public $sample_vue;
     public $sample_request;
     public $belongsTo;
     public $module_test_case;
@@ -39,7 +40,8 @@ Class Helper {
         $this->sample_route = base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/Route.php";
         $this->sample_side = base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/side.php";
         $this->sample_view = base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/view.php";
-        $this->sample_vue = base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/view.vue";
+        $this->sample_modulelist = base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/moduleList.php";
+        // $this->sample_vue = base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/view.vue";
         $this->belongsTo = base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/belongsTo.php";
         $this->module_test_case = base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/ModuleTestCase.php";
     }
@@ -62,7 +64,7 @@ Class Helper {
         if($production) {
             $project_path_main = env('PROD_PROJECT_PATH');
         }
-        
+
         $table_fields = $this->getTableFields($request, $old_data);
 
         if(empty($request->parent_module)) {
@@ -116,7 +118,7 @@ Class Helper {
         $this->tableFieldsLoop($request);
 
         $this->inputFieldsLoop($request, $project_path_main, $controller_name);
-                
+        
         $table_fields = $this->getTableFields($request, $old_data);
         if(!empty($this->field['table_fields'])) {
             $table_fields = $this->field['table_fields'];
@@ -171,7 +173,7 @@ Class Helper {
                         'ModelArray' => "// [ModelArray]",
                         'Relation' => $this->field['relation'],
                         'GRID_RESET' => "// [GRID_RESET]",
-                        'POST_METHOD' => $this->checkPostMethod($request),
+                        // 'POST_METHOD' => $this->checkPostMethod($request),
                         'Controller_Relation' => $this->field['controller_relation'],
                         'Controller_Search_Relation' => $this->field['controller_search_relation'],
                     ];
@@ -189,6 +191,7 @@ Class Helper {
                 }
             }
         }
+        
         $this->field['db_module_config'] = $this->ModuleConfig($request, $controller_name);
 
         $this->getAllFiles($request, $project_path_main, $controller_name, $old_data);
@@ -218,17 +221,17 @@ Class Helper {
         }
     }
 
-    public function checkPostMethod($request){
-        $method = 'this.form.post(this.module.store_route).then(response => {';
-        if($this->checkFileElement($request)) {
-            $method = `
-                var data = new FormData($("form")[0]);"\n\n"
-                this.form.postWithFile(this.module.store_route,data).then(response => {
-                `;
-        }
+    // public function checkPostMethod($request){
+    //     $method = 'this.form.post(this.module.store_route).then(response => {';
+    //     if($this->checkFileElement($request)) {
+    //         $method = `
+    //             var data = new FormData($("form")[0]);"\n\n"
+    //             this.form.postWithFile(this.module.store_route,data).then(response => {
+    //             `;
+    //     }
 
-        return $method;
-    }
+    //     return $method;
+    // }
 
     public function checkFileElement($request){
         for($i=0; $i < count($request->input_name); $i++) {
@@ -313,10 +316,12 @@ Class Helper {
                 $project_path_main."/resources/views/backend/modules/".strtolower($controller_name).'-table.blade.php' => $this->sample_list,
 
                 $project_path_main."/resources/views/backend/modules/".strtolower($controller_name).'.blade.php' => $this->sample_view,
+
+                $project_path_main."/resources/views/backend/modules/".strtolower($controller_name).'-list.blade.php' => $this->sample_modulelist,
                 
                 $vueFolder.'/html.vue' => $this->sample_html ,
 
-                $vueFolder.'/view.vue' => $this->sample_vue,
+                // $vueFolder.'/view.vue' => $this->sample_vue,
 
                 $vueFolder.'/list.vue' => $this->sample_listvue,
 
@@ -552,10 +557,7 @@ Class Helper {
 
         $this->field['moduleconfig_filedata'] = "
         <?php
-
-        $formelements\n"."\t"."\t"."
-        $csrf\n"."\t"."\t".
-        
+        ".
         '$data'." =  [
                 'lang' => Lang::get".$lang.",
                 'common' => Lang::get('label.common'),
@@ -574,9 +576,6 @@ Class Helper {
                 'get_file' => route('get.file'),
                 ".$this->field['dropdown_search_url']."
             ];"."\n"."\t"."\t".
-        '$data["fillable"]'." = ".'$formelements'.";"."\n"."\t"."\t".
-        "$empty_drop"."\n"."\t"."\t".
-        '// ['.ucfirst($controller_name).'Grid]'."\n"."\t"."\t".
         'return $data;'."\n"."
         ";
 
@@ -661,15 +660,11 @@ Class Helper {
             //     $form_fields .= "\n"."\t"."\t"."\t".'<div class="row">';
             // }
 
-            $first = 'form.errors.has("'.$db_name.'")?"form-group has-error":"form-group"';
-            $v_model = "form.$db_name";
-            $error = "$db_name-error";
-            $error_if = 'form.errors.has("'.$db_name.'")';
-            $error_end = 'form.errors.get("'.$db_name.'")';
+            $v_model = "model_data.$db_name";
 
             if($request->input_type[$i] == "dropdown") {
         
-                $model = "form.".$db_name;
+                $model = "model_data.".$db_name;
                 $placeholder = "Select ".$input_name;
                 $false = 'false';
                 $search = "onSearch".$db_name;
@@ -679,17 +674,13 @@ Class Helper {
                 $form_fields .= 
                 "
                 <div class='col-sm-6'>
-                    <div :class='".$first."'>
+                    <div class='form-group'>
                         <label for='".$input_name."'> {{this.module.lang.".$db_name."}} </label>
                         
                         <select class='form-control select-form' ref='".$db_name."' name='".$db_name."' v-model='".$model."'>
                             <option value=''>".$placeholder."</option>
                             <option v-for='(value, key) in ".$db_name."' :value='key'>{{value}}</option>
                         </select>
-
-                        <span class='help-block text-danger' 
-                        v-if='".$error_if."'
-                        v-text='".$error_end."'></span>
                     </div>
                 </div>
                 ";
@@ -700,16 +691,13 @@ Class Helper {
             $form_fields .= 
                 "
                 <div class='col-sm-6'>
-                    <div :class='".$first."'>
+                    <div class='form-group'>
                         <label for='".$input_name."'>{{this.module.lang.".$db_name."}}</label>
 
                         <select class='form-control select-form' ref='".$db_name."' name='".$db_name."' v-model='".$model."'>
                             <option value=''>".$placeholder."</option>
                             <option v-for='(value, key) in ".$db_name."' :value='value'>{{value}}</option>
                         </select>
-                        <span class='help-block text-danger' 
-                        v-if='".$error_if."'
-                        v-text='".$error_end."'></span>
                     </div>
                 </div>
                 "
@@ -723,14 +711,11 @@ Class Helper {
                 $form_fields .= 
                 "
                 <div class='col-sm-6'>
-                    <div :class='".$first."'>
-                        <p-input type='checkbox' name='".$db_name."' class='p-icon p-rotate p-bigger' color='primary' v-bind:true-value='1' v-bind:false-value='0' v-model='form.".$db_name."'>
+                    <div class='form-group'>
+                        <p-input type='checkbox' name='".$db_name."' class='p-icon p-rotate p-bigger' color='primary' v-bind:true-value='1' v-bind:false-value='0' v-model='model_data.".$db_name."'>
                             <i slot='extra' class='icon mdi mdi-check'></i>
                             {{this.module.lang.".$db_name."}}
                         </p-input>
-                        <span class='help-block text-danger' 
-                        v-if='".$error_if."'
-                        v-text='".$error_end."'></span>
                     </div>
                 </div>
                 ";
@@ -742,13 +727,13 @@ Class Helper {
                 "
                 <div class='col-sm-3'>
                     <label class='radio-inline radio-styled'>
-                        <input type='radio' id='".$db_name."-1' name='".$db_name."' value='1' v-model='form.".$db_name."'>
+                        <input type='radio' id='".$db_name."-1' name='".$db_name."' value='1' v-model='model_data.".$db_name."'>
                         <b> {{this.module.lang.".$db_name."}} </b>
                     </label>
                 </div>
                 <div class='col-sm-3'>
                     <label class='radio-inline radio-styled'>
-                        <input type='radio' id='".$db_name."-2' name='".$db_name."' value='2' v-model='form.".$db_name."'>
+                        <input type='radio' id='".$db_name."-2' name='".$db_name."' value='2' v-model='model_data.".$db_name."'>
                         <b> {{this.module.lang.".$db_name."}} </b>
                     </label>
                 </div>
@@ -760,13 +745,10 @@ Class Helper {
                 $form_fields .= 
                 "
                 <div class='col-sm-6'>
-                    <div :class='".$first."'>
+                    <div class='form-group'>
                         <label for='".$input_name."'> {{this.module.lang.".$db_name."}} </label>
 
                         <input type='text' name='".$db_name."' class='form-control' v-model='".$v_model."'>
-                        <span class='help-block text-danger' 
-                        v-if='".$error_if."'
-                        v-text='".$error_end."'></span>
                     </div>
                 </div>
                 ";
@@ -776,13 +758,10 @@ Class Helper {
                 $form_fields .= 
                 "
                 <div class='col-sm-6'>
-                    <div :class='".$first."'>
+                    <div class='form-group'>
                         <label for='".$input_name."'> {{this.module.lang.".$db_name."}} </label>
 
                         <input type='file' name='".$db_name."' class='form-control' v-model='".$v_model."'>
-                        <span class='help-block text-danger' 
-                        v-if='".$error_if."'
-                        v-text='".$error_end."'></span>
                     </div>
                 </div>
                 ";
@@ -810,12 +789,9 @@ Class Helper {
                 $form_fields .= 
                 "
                 <div class='col-sm-6'>
-                    <div :class='".$first."'>
+                    <div class='form-group'>
                         <label> {{this.module.lang.".$db_name."}} </label>
                         <datepicker v-model='".$v_model."' :input-class='".$class."' :calendar-button-icon='".$cal."' :format='".$fromat."' id='".$db_name."' name='".$db_name."'></datepicker>
-                        <span class='help-block text-danger' 
-                        v-if='".$error_if."'
-                        v-text='".$error_end."'></span>
                     </div>
                 </div>
                 ";
