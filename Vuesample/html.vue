@@ -69,9 +69,10 @@ export default {
                 this.$root.$emit('[TNAME]Created', response);
                 this.$parent.activity_init();
 
-        }).catch(error => {
-            
-        });
+            }).catch(error => {
+                
+            });
+        }
     },
 
     mounted() {
