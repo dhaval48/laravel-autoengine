@@ -145,13 +145,15 @@ class [UNAME]Controller extends Controller {
         $this->validate($request, [
                 [VALIDATION]
             ]
-        );   
-        // [GridValidation]        
+        );
+
+        $input = Helpers::attachFile($request);
+        // [GridValidation]
         // [DropdownValue]
 
         \DB::beginTransaction();   
         try {
-            $input = Helpers::attachFile($request);
+            
             if(isset($request->id)) {
                 $model = Module::find($request->id);
                 $msg = Helpers::activity($input, $this->data['lang'], $model->toArray());
