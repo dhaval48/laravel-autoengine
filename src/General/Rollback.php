@@ -11,9 +11,11 @@ Class Rollback {
     public $field = [];
 
     function __construct() {
-        $this->sample_component = base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/component.js";
-        $this->sample_route = base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/Route.php";
-        $this->sample_side = base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/side.php";
+        $this->field['theme_path'] = base_path() .'/'. env('THEME_PATH', 'vendor/ongoingcloud/laravelcrud');
+
+        $this->sample_component = $this->field['theme_path']."/Vuesample/component.js";
+        $this->sample_route = $this->field['theme_path']."/Vuesample/Route.php";
+        $this->sample_side = $this->field['theme_path']."/Vuesample/side.php";
     }
 
     public function getSampleContent() {
@@ -45,7 +47,7 @@ Class Rollback {
         }
 
         if(empty($request->parent_module)) { 
-            $this->sample_route = base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/WithoutPrefixRoute.php";
+            $this->sample_route = $this->field['theme_path']."/Vuesample/WithoutPrefixRoute.php";
         }
 
         // if(file_exists($project_path_main."/app/Http/Controllers/Backend/".ucfirst($controller_name).'Controller.php')) {
@@ -265,7 +267,7 @@ Class Rollback {
     // common route [CommonRoute]
     public function commonRoute($request, $i, $db_name) {
         
-        $route =  base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/common.php";
+        $route =  $this->field['theme_path']."/Vuesample/common.php";
             
         $common = file_get_contents($route);
         

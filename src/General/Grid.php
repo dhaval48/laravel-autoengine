@@ -17,11 +17,12 @@ Class Grid {
 	public $field = [];
 
 	function __construct() {
-
-        $this->sample_modal = base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/modal.php";
+        $this->field['theme_path'] = base_path() .'/'. env('THEME_PATH', 'vendor/ongoingcloud/laravelcrud');
         
-        $this->parent_relation = base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/parentrelation.php";
-        $this->sample_gridmodel = base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/GridModel.php";
+        $this->sample_modal = $this->field['theme_path']."/Vuesample/modal.php";
+        
+        $this->parent_relation = $this->field['theme_path']."/Vuesample/parentrelation.php";
+        $this->sample_gridmodel = $this->field['theme_path']."/Vuesample/GridModel.php";
  	}
 
     public function loadFilePath($request, $project_path_main, $parent_controller_name) {
@@ -65,9 +66,9 @@ Class Grid {
 
         $this->getTableFields($request, $parent_controller_name, $parent_table_name, $old_data);
         if(!empty($this->field['table_fields'])) {
-            $this->sample_gridmigration = base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/UpdateMigration.php";
+            $this->sample_gridmigration = $this->field['theme_path']."/Vuesample/UpdateMigration.php";
         } else {
-            $this->sample_gridmigration = base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/GridMigration.php";
+            $this->sample_gridmigration = $this->field['theme_path']."/Vuesample/GridMigration.php";
         }
 
         $this->loadFilePath($request, $project_path_main, $parent_controller_name);
@@ -574,7 +575,7 @@ Class Grid {
     // common route [CommonRoute]
     public function commonRoute($request, $i, $db_name) {
         
-        $route =  base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/common.php";
+        $route =  $this->field['theme_path']."/Vuesample/common.php";
             
         $common = file_get_contents($route);
         

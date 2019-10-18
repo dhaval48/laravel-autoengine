@@ -15,6 +15,8 @@ Class ApiHelper {
     public $field = [];
 
     function __construct() {
+        $this->field['theme_path'] = base_path() .'/'. env('THEME_PATH', 'vendor/ongoingcloud/laravelcrud');
+        
         $this->api_controller = base_path()."/vendor/ongoingcloud/laravelcrud/Apisample/Controller.php";
         $this->api_test_case = base_path()."/vendor/ongoingcloud/laravelcrud/Apisample/apiTestCase.php";
         $this->api_model = base_path()."/vendor/ongoingcloud/laravelcrud/Apisample/Model.php";
@@ -47,7 +49,7 @@ Class ApiHelper {
 
         $table_fields = $this->getTableFields($request, $old_data);
         if(!empty($this->field['table_fields'])) {
-            $this->api_migration = base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/UpdateMigration.php";
+            $this->api_migration = $this->field['theme_path']."Vuesample/UpdateMigration.php";
         } else {
             $this->api_migration = base_path()."/vendor/ongoingcloud/laravelcrud/Apisample/Migration.php";
         }

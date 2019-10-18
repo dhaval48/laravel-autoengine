@@ -98,6 +98,13 @@ class LaravelCrudServiceProvider extends ServiceProvider
             \File::makeDirectory(base_path()."/app/Models", $mode = 0777, true, true);
         }
 
+        // Publishing VueSample.    
+        if(!\File::exists(base_path()."/VueSample")) {
+            $this->publishes([
+                __DIR__.'/../VueSample' => base_path(),
+            ]);
+        }
+
         if(!\File::exists(base_path()."/app/General/ModuleConfig")) {
             \File::makeDirectory(base_path()."/app/General/ModuleConfig", $mode = 0777, true, true);
         }

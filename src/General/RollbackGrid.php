@@ -3,9 +3,9 @@
 namespace Ongoingcloud\Laravelcrud\General;
 
 Class RollbackGrid {
-
+    public $field = [];
 	function __construct() {
-
+        $this->field['theme_path'] = base_path() .'/'. env('THEME_PATH', 'vendor/ongoingcloud/laravelcrud');
  	}
 
 	public function deleteFiles($request, $production = false, $delete = false) {
@@ -182,7 +182,7 @@ Class RollbackGrid {
     // common route [CommonRoute]
     public function commonRoute($request, $i, $db_name) {
         
-        $route =  base_path()."/vendor/ongoingcloud/laravelcrud/Vuesample/common.php";
+        $route =  $this->field['theme_path']."/Vuesample/common.php";
             
         $common = file_get_contents($route);
         
