@@ -46,12 +46,12 @@ export default {
     data(){
         return {
             form:this.formObj,
-            is_save:false
+            is_save:false,
             // [OptionsData]
         }
     },
     methods: {
-        onSubmit() { 
+        onSubmit() {
             this.is_save = true;
             
             //[POST_METHOD]        
@@ -69,9 +69,11 @@ export default {
                 this.$root.$emit('[TNAME]Created', response);
                 this.$parent.activity_init();
 
-            }).catch(function(){});
-        }
+        }).catch(error => {
+            
+        });
     },
+
     mounted() {
             
         // [DropdownSearch]
