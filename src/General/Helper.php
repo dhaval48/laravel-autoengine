@@ -464,7 +464,7 @@ Class Helper {
 
                 if($request->input_type[$i] == 'dropdown'){
                     //[DropdownSearch]
-                    $dropdown_mount .= "\n"."\t"."\t"."this.form.$db_name = this.form.$db_name ? this.form.$db_name : '';"."\n"."\t"."\t";
+                    $dropdown_mount .= "\n"."\t"."\t"."this.model_data.$db_name = this.model_data.$db_name ? this.model_data.$db_name : '';"."\n"."\t"."\t";
                     $dropdown_mount .= $this->dropdownMountEmpty($db_name, $request->table[$i], $dropdown_mount);
 
                     if($request->key[$i] != "") {

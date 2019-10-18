@@ -86,16 +86,14 @@ export default {
                 this.is_save = false;
 
             }).catch(error => {
-                var a = '';
                 this.is_save = false;
                 
                 for(var key in error.response.data.errors){
-                    a += error.response.data.errors[key][0] + "<br />";
+                    new Message().errorMessage(error.response.data.errors[key][0]);
                 }
+                
                 if(error.response.data.meta) {                    
                     new Message().errorMessage(error.response.data.meta.message);
-                } else {
-                    new Message().errorMessage(a.replace(/\n/g, "<br />"));
                 }
             });
         },
