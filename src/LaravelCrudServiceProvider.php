@@ -101,7 +101,7 @@ class LaravelCrudServiceProvider extends ServiceProvider
         // Publishing VueSample.    
         if(!\File::exists(base_path()."/VueSample")) {
             $this->publishes([
-                __DIR__.'/../VueSample' => base_path(),
+                __DIR__.'/../VueSample' => \File::makeDirectory(base_path()."/VueSample", $mode = 0777, true, true);
             ]);
         }
 
